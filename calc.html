@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scientific Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e8f0ff, #fefefe);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .calculator {
+      width: 580px;
+      background: #ffffffcc;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .display {
+      width: 100%;
+      height: 90px;
+      background: #f7f9fc;
+      border: none;
+      border-radius: 10px;
+      font-size: 2.2em;
+      color: #333;
+      text-align: right;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      height: 60px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 10px;
+      background: #f0f2f5;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background: #d9e4ff;
+    }
+
+    .operator {
+      background: #b3caff;
+      color: #000;
+    }
+
+    .equal {
+      background: #00b894;
+      color: white;
+      grid-column: span 2;
+    }
+
+    .equal:hover {
+      background: #00997a;
+    }
+
+    .clear {
+      background: #ff7675;
+      color: white;
+    }
+
+    .clear:hover {
+      background: #e84118;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" class="display" disabled />
+
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="deleteLast()">DEL</button>
+      <button onclick="appendValue('(')">(</button>
+      <button onclick="appendValue(')')">)</button>
+      <button onclick="appendValue('%')">%</button>
+      <button class="operator" onclick="appendValue('/')">÷</button>
+
+      <button onclick="appendValue('sin(')">sin</button>
+      <button onclick="appendValue('cos(')">cos</button>
+      <button onclick="appendValue('tan(')">tan</button>
+      <button onclick="appendValue('log(')">log</button>
+      <button onclick="appendValue('sqrt(')">√</button>
+      <button class="operator" onclick="appendValue('*')">×</button>
+
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button onclick="appendValue('pi')">π</button>
+      <button onclick="appendValue('e')">e</button>
+      <button class="operator" onclick="appendValue('-')">−</button>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button onclick="appendValue('^')">xʸ</button>
+      <button onclick="appendValue('!')">x!</button>
+      <button class="operator" onclick="appendValue('+')">+</button>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button onclick="appendValue('.')">.</button>
+      <button onclick="appendValue('0')">0</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+
+    function appendValue(val) {
+      display.value += val;
+    }
+
+    function clearDisplay() {
+      display.value = "";
+    }
+
+    function deleteLast() {
+      display.value = display.value.slice(0, -1);
+    }
+
+    function factorial(n) {
+      if (n < 0) return NaN;
+      if (n === 0 || n === 1) return 1;
+      return n * factorial(n - 1);
+    }
+
+    function calculate() {
+      try {
+        let expression = display.value
+          .replace(/sin\(/g, "Math.sin(")
+          .replace(/cos\(/g, "Math.cos(")
+          .replace(/tan\(/g, "Math.tan(")
+          .replace(/log\(/g, "Math.log10(")
+          .replace(/sqrt\(/g, "Math.sqrt(")
+          .replace(/pi/g, "Math.PI")
+          .replace(/e/g, "Math.E")
+          .replace(/\^/g, "**");
+
+        // handle factorials like "5!"
+        expression = expression.replace(/(\d+)!/g, (_, n) => `factorial(${n})`);
+
+        const result = eval(expression);
+        display.value = result;
+      } catch (e) {
+        display.value = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
